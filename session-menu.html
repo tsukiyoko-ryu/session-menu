@@ -8,41 +8,40 @@
 <style>
   :root {
     --gold: #c9a84c;
-    --gold-light: #f0d080;
+    --gold-light: #b8902a;
     --gold-dim: #7a6020;
-    --deep: #050508;
-    --dark: #0d0d14;
-    --card-bg: #10101a;
-    --text: #e8dfc8;
-    --muted: #8a7f6a;
-    --accent-teal: #3ecfcf;
-    --accent-violet: #a066ff;
+    --deep: #f5f0e8;
+    --dark: #ede8de;
+    --card-bg: #eee9df;
+    --text: #2a2015;
+    --muted: #6b5f45;
+    --accent-teal: #1a8a8a;
+    --accent-violet: #7040cc;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html {
-    background-color: #050508 !important;
+    background-color: #f5f0e8 !important;
   }
 
   body {
-    background-color: #050508 !important;
-    background: #050508 !important;
+    background-color: #f5f0e8 !important;
+    background: #f5f0e8 !important;
     color: var(--text);
     font-family: 'Noto Serif JP', serif;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
-  /* ── Stars background ── */
+  /* ── Soft background ── */
   body::before {
     content: '';
     position: fixed;
     inset: 0;
     background:
-      radial-gradient(ellipse at 20% 20%, rgba(160,100,255,0.07) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 80%, rgba(62,207,207,0.07) 0%, transparent 50%),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Ccircle cx='50' cy='80' r='1' fill='white' opacity='0.6'/%3E%3Ccircle cx='150' cy='20' r='0.8' fill='white' opacity='0.4'/%3E%3Ccircle cx='300' cy='60' r='1.2' fill='white' opacity='0.7'/%3E%3Ccircle cx='380' cy='150' r='0.7' fill='white' opacity='0.3'/%3E%3Ccircle cx='80' cy='200' r='1' fill='white' opacity='0.5'/%3E%3Ccircle cx='250' cy='180' r='0.9' fill='white' opacity='0.6'/%3E%3Ccircle cx='350' cy='300' r='1.1' fill='white' opacity='0.4'/%3E%3Ccircle cx='20' cy='350' r='0.8' fill='white' opacity='0.5'/%3E%3Ccircle cx='180' cy='370' r='1' fill='white' opacity='0.3'/%3E%3Ccircle cx='320' cy='390' r='0.7' fill='white' opacity='0.6'/%3E%3Ccircle cx='120' cy='300' r='1.2' fill='white' opacity='0.4'/%3E%3Ccircle cx='400' cy='250' r='0.9' fill='white' opacity='0.7'/%3E%3C/svg%3E");
+      radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.08) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(160,120,60,0.06) 0%, transparent 50%);
     pointer-events: none;
     z-index: 0;
   }
@@ -160,7 +159,7 @@
   #overlay {
     position: fixed;
     inset: 0;
-    background: rgba(5,5,8,0.95);
+    background: rgba(245,240,232,0.97);
     backdrop-filter: blur(8px);
     z-index: 100;
     display: flex;
@@ -244,13 +243,14 @@
   /* ── Session Cards ── */
   .session-card {
     position: relative;
-    background: var(--card-bg);
-    border: 1px solid rgba(201,168,76,0.2);
+    background: #fff;
+    border: 1px solid rgba(201,168,76,0.3);
     margin-bottom: 20px;
     overflow: hidden;
     cursor: pointer;
     transition: border-color 0.3s, transform 0.3s;
     animation: cardIn 0.5s both;
+    box-shadow: 0 2px 16px rgba(160,120,60,0.08);
   }
 
   .session-card:hover {
@@ -377,9 +377,10 @@
   .bottom-note {
     margin-top: 36px;
     padding: 24px;
-    border: 1px solid rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.25);
     text-align: center;
-    background: rgba(201,168,76,0.03);
+    background: #fff;
+    box-shadow: 0 2px 16px rgba(160,120,60,0.08);
   }
 
   .bottom-note .note-icon { font-size: 22px; margin-bottom: 10px; }
