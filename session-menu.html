@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>セッションメニュー</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Cinzel+Decorative:wght@400;700&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dim: #7a6020;
+    --deep: #050508;
+    --dark: #0d0d14;
+    --card-bg: #10101a;
+    --text: #e8dfc8;
+    --muted: #8a7f6a;
+    --accent-teal: #3ecfcf;
+    --accent-violet: #a066ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'Noto Serif JP', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Stars background ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(160,100,255,0.07) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(62,207,207,0.07) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Ccircle cx='50' cy='80' r='1' fill='white' opacity='0.6'/%3E%3Ccircle cx='150' cy='20' r='0.8' fill='white' opacity='0.4'/%3E%3Ccircle cx='300' cy='60' r='1.2' fill='white' opacity='0.7'/%3E%3Ccircle cx='380' cy='150' r='0.7' fill='white' opacity='0.3'/%3E%3Ccircle cx='80' cy='200' r='1' fill='white' opacity='0.5'/%3E%3Ccircle cx='250' cy='180' r='0.9' fill='white' opacity='0.6'/%3E%3Ccircle cx='350' cy='300' r='1.1' fill='white' opacity='0.4'/%3E%3Ccircle cx='20' cy='350' r='0.8' fill='white' opacity='0.5'/%3E%3Ccircle cx='180' cy='370' r='1' fill='white' opacity='0.3'/%3E%3Ccircle cx='320' cy='390' r='0.7' fill='white' opacity='0.6'/%3E%3Ccircle cx='120' cy='300' r='1.2' fill='white' opacity='0.4'/%3E%3Ccircle cx='400' cy='250' r='0.9' fill='white' opacity='0.7'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Hero / Trigger button area ── */
+  #hero {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    text-align: center;
+    padding: 40px 24px;
+  }
+
+  .hero-label {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 1s 0.3s forwards;
+  }
+
+  .hero-title {
+    font-family: 'Noto Serif JP', serif;
+    font-size: clamp(32px, 8vw, 56px);
+    font-weight: 700;
+    line-height: 1.3;
+    background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, var(--gold-dim) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 1s 0.5s forwards;
+  }
+
+  .hero-sub {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    margin-bottom: 48px;
+    opacity: 0;
+    animation: fadeUp 1s 0.7s forwards;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+  }
+
+  /* Dragon ornament */
+  .dragon-ornament {
+    font-size: 72px;
+    margin-bottom: 36px;
+    filter: drop-shadow(0 0 20px rgba(201,168,76,0.5));
+    opacity: 0;
+    animation: fadeUp 1s 0.2s forwards, float 6s 1.5s ease-in-out infinite;
+  }
+
+  /* Menu trigger button */
+  .menu-btn {
+    position: relative;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    opacity: 0;
+    animation: fadeUp 1s 0.9s forwards;
+  }
+
+  .menu-btn-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 42px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Noto Serif JP', serif;
+    font-size: 15px;
+    letter-spacing: 0.2em;
+    position: relative;
+    transition: all 0.4s;
+    background: rgba(201,168,76,0.05);
+  }
+
+  .menu-btn-inner::before,
+  .menu-btn-inner::after {
+    content: '';
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-color: var(--gold-light);
+    border-style: solid;
+    transition: all 0.4s;
+  }
+  .menu-btn-inner::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+  .menu-btn-inner::after  { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+  .menu-btn:hover .menu-btn-inner {
+    background: rgba(201,168,76,0.12);
+    box-shadow: 0 0 30px rgba(201,168,76,0.2);
+    letter-spacing: 0.3em;
+  }
+
+  .menu-btn-icon {
+    font-size: 18px;
+    transition: transform 0.4s;
+  }
+  .menu-btn:hover .menu-btn-icon { transform: rotate(90deg); }
+
+  /* ── Overlay ── */
+  #overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,5,8,0.95);
+    backdrop-filter: blur(8px);
+    z-index: 100;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s;
+    padding: 0 0 60px;
+  }
+
+  #overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* Overlay content */
+  .overlay-inner {
+    width: 100%;
+    max-width: 640px;
+    padding: 40px 24px 60px;
+    transform: translateY(30px);
+    transition: transform 0.5s;
+  }
+  #overlay.open .overlay-inner { transform: translateY(0); }
+
+  /* Close button */
+  .close-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    margin-bottom: 40px;
+    transition: color 0.3s;
+  }
+  .close-btn:hover { color: var(--gold); }
+  .close-btn span { font-size: 20px; }
+
+  /* Menu header */
+  .menu-header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .menu-header-tag {
+    font-size: 9px;
+    letter-spacing: 0.5em;
+    color: var(--gold);
+    font-family: 'Cinzel Decorative', serif;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .menu-header h2 {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 10px;
+  }
+  .menu-header p {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    line-height: 1.8;
+  }
+
+  /* Divider */
+  .gold-line {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 16px auto;
+  }
+
+  /* ── Session Cards ── */
+  .session-card {
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid rgba(201,168,76,0.2);
+    margin-bottom: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color 0.3s, transform 0.3s;
+    animation: cardIn 0.5s both;
+  }
+
+  .session-card:hover {
+    border-color: rgba(201,168,76,0.6);
+    transform: translateY(-2px);
+  }
+
+  .session-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold-dim));
+  }
+
+  .card-number {
+    position: absolute;
+    top: 16px; right: 16px;
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 32px;
+    color: rgba(201,168,76,0.08);
+    font-weight: 700;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .card-body {
+    padding: 24px 24px 24px 28px;
+  }
+
+  .card-tag {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--gold);
+    font-family: 'Cinzel Decorative', serif;
+    margin-bottom: 8px;
+  }
+
+  .card-situation {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  .card-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.4;
+  }
+
+  .card-price {
+    font-size: 12px;
+    color: var(--gold);
+    font-family: 'Noto Sans JP', sans-serif;
+    margin-bottom: 16px;
+    letter-spacing: 0.05em;
+  }
+
+  .card-points {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 16px;
+  }
+
+  .card-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  .card-point::before {
+    content: '—';
+    color: var(--gold-dim);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--gold);
+    font-family: 'Noto Sans JP', sans-serif;
+    letter-spacing: 0.15em;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+    padding-bottom: 2px;
+    transition: gap 0.3s, border-color 0.3s;
+    text-decoration: none;
+  }
+
+  .session-card:hover .card-cta {
+    gap: 10px;
+    border-color: var(--gold);
+  }
+
+  /* Card color variants */
+  .card-1::before { background: linear-gradient(180deg, #f0d080, #c9a84c); }
+  .card-2::before { background: linear-gradient(180deg, #3ecfcf, #1a9a9a); }
+  .card-3::before { background: linear-gradient(180deg, #a066ff, #6633cc); }
+  .card-4::before { background: linear-gradient(180deg, #c9a84c, #7a6020); }
+
+  .card-1 .card-tag { color: var(--gold-light); }
+  .card-2 .card-tag { color: var(--accent-teal); }
+  .card-2 .card-price { color: var(--accent-teal); }
+  .card-2 .card-cta { color: var(--accent-teal); border-color: rgba(62,207,207,0.3); }
+  .card-3 .card-tag { color: var(--accent-violet); }
+  .card-3 .card-price { color: var(--accent-violet); }
+  .card-3 .card-cta { color: var(--accent-violet); border-color: rgba(160,102,255,0.3); }
+
+  /* Bottom note */
+  .bottom-note {
+    margin-top: 36px;
+    padding: 24px;
+    border: 1px solid rgba(201,168,76,0.15);
+    text-align: center;
+    background: rgba(201,168,76,0.03);
+  }
+
+  .bottom-note .note-icon { font-size: 22px; margin-bottom: 10px; }
+  .bottom-note p {
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.9;
+    font-family: 'Noto Serif JP', serif;
+  }
+  .bottom-note em {
+    color: var(--gold);
+    font-style: normal;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(-10px); }
+  }
+
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateX(-16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  .session-card:nth-child(1) { animation-delay: 0.05s; }
+  .session-card:nth-child(2) { animation-delay: 0.15s; }
+  .session-card:nth-child(3) { animation-delay: 0.25s; }
+  .session-card:nth-child(4) { animation-delay: 0.35s; }
+
+  /* Glow pulse on hero dragon */
+  @keyframes glow {
+    0%, 100% { filter: drop-shadow(0 0 16px rgba(201,168,76,0.4)); }
+    50%       { filter: drop-shadow(0 0 36px rgba(201,168,76,0.8)); }
+  }
+  .dragon-ornament { animation: fadeUp 1s 0.2s forwards, float 6s 1.5s ease-in-out infinite, glow 3s 1.5s ease-in-out infinite; }
+
+
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<section id="hero">
+  <div class="dragon-ornament">🐉</div>
+  <p class="hero-label">Session Guide</p>
+  <h1 class="hero-title">今のあなたに<br>必要なセッションは？</h1>
+  <p class="hero-sub">今の気持ちに一番近いものをお選びください</p>
+
+  <button class="menu-btn" onclick="openMenu()">
+    <div class="menu-btn-inner">
+      <span class="menu-btn-icon">✦</span>
+      セッションメニューを見る
+      <span class="menu-btn-icon">✦</span>
+    </div>
+  </button>
+
+
+</section>
+
+<!-- ═══ MENU OVERLAY ═══ -->
+<div id="overlay">
+  <div class="overlay-inner">
+
+    <button class="close-btn" onclick="closeMenu()">
+      <span>×</span> 閉じる
+    </button>
+
+    <div class="menu-header">
+      <span class="menu-header-tag">SESSION MENU</span>
+      <h2>今のあなたに<br>必要なセッションは？</h2>
+      <div class="gold-line"></div>
+      <p>直感で選んでいただいて大丈夫です ✨<br>迷った場合は 04 方向をひらく対話 からでも◎</p>
+    </div>
+
+    <!-- Card 1 -->
+    <div class="session-card card-1">
+      <div class="card-number">01</div>
+      <div class="card-body">
+        <span class="card-tag">DRAGON MESSAGE</span>
+        <p class="card-situation">今、どうしたらいいか分からない・方向を知りたい</p>
+        <h3 class="card-title">龍の言葉セッション</h3>
+        <p class="card-price">40分 ／ ¥16,000</p>
+        <div class="card-points">
+          <div class="card-point">人生の流れを知りたい</div>
+          <div class="card-point">決断に迷っている</div>
+          <div class="card-point">今の自分に必要なメッセージが欲しい</div>
+        </div>
+        <a class="card-cta" href="https://forms.gle/PadRzmsAYE6sTRTSA" target="_blank">"流れ" を見たい人はこちら →</a>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="session-card card-2">
+      <div class="card-number">02</div>
+      <div class="card-body">
+        <span class="card-tag">SUBCONSCIOUS REWRITING</span>
+        <p class="card-situation">同じ悩みを繰り返している・変わりたい</p>
+        <h3 class="card-title">潜在意識書き換えセッション</h3>
+        <p class="card-price">30分 ／ ¥8,000</p>
+        <div class="card-points">
+          <div class="card-point">思考や感情のクセを変えたい</div>
+          <div class="card-point">なぜか同じことが起きる</div>
+          <div class="card-point">内側から変化したい</div>
+        </div>
+        <a class="card-cta" href="https://forms.gle/PadRzmsAYE6sTRTSA" target="_blank">"パターン" を変えたい人はこちら →</a>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="session-card card-3">
+      <div class="card-number">03</div>
+      <div class="card-body">
+        <span class="card-tag">GUARDIAN SPIRIT</span>
+        <p class="card-situation">見えないサポートや安心感がほしい</p>
+        <h3 class="card-title">守護霊セッション</h3>
+        <p class="card-price">30分 ／ ¥8,000</p>
+        <div class="card-points">
+          <div class="card-point">守られている感覚がほしい</div>
+          <div class="card-point">背中を押してほしい</div>
+          <div class="card-point">今の自分の在り方を確認したい</div>
+        </div>
+        <a class="card-cta" href="https://forms.gle/PadRzmsAYE6sTRTSA" target="_blank">"支え" を感じたい人はこちら →</a>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="session-card card-4">
+      <div class="card-number">04</div>
+      <div class="card-body">
+        <span class="card-tag">FIRST STEP</span>
+        <p class="card-situation">どれを受けたらいいか分からない・まず話したい</p>
+        <h3 class="card-title">方向をひらく対話</h3>
+        <p class="card-price">30分 ／ ¥3,000</p>
+        <div class="card-points">
+          <div class="card-point">今の状況を整理したい</div>
+          <div class="card-point">自分に必要な方向を知りたい</div>
+          <div class="card-point">セッション選びに迷っている</div>
+        </div>
+        <a class="card-cta" href="https://forms.gle/PadRzmsAYE6sTRTSA" target="_blank">迷っている方はこちら →</a>
+      </div>
+    </div>
+
+    <!-- Bottom note -->
+    <div class="bottom-note">
+      <div class="note-icon">✦</div>
+      <p>
+        「直感で選んでいただいて大丈夫です ✨<br>
+        迷った場合は <em>"方向をひらく対話"</em> からでも◎」
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function openMenu() {
+    document.getElementById('overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeMenu() {
+    document.getElementById('overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+  // Close on backdrop click
+  document.getElementById('overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeMenu();
+  });
+  // Close on Escape
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeMenu();
+  });
+</script>
+</body>
+</html>
